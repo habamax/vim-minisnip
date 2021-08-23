@@ -9,7 +9,7 @@ Use plugin manager of your choice or
 
 [source, sh]
 ------------------------------------------------------------------------------
-git clone --depth=1 https://github.com/habamax/vim-minisnip.git ~./vim/pack/plug/start/vim-minisnip
+git clone --depth=1 https://github.com/habamax/vim-minisnip.git ~/.vim/pack/plug/start/vim-minisnip
 ------------------------------------------------------------------------------
 
 == Default snippets
