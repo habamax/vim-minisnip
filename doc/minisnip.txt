@@ -151,11 +151,11 @@ simply place all the snippets in a subdirectory with the trigger name:
 ==============================================================================
 USAGE                                                         *minisnip-usage*
 
-                                                 *'snippets'* *g:minisnips_dir*
+                                                 *'snippets'* *g:minisnip_dir*
 Snippets are by default looked for any 'snippets' directory in your
 'runtimepath'. Typically, it is located at '~/.vim/snippets/' on *nix or
 '$HOME\vimfiles\snippets\' on Windows. To change that location or add another
-one, change the "g:minisnips_dir" variable in your |.vimrc| to your preferred
+one, change the "g:minisnip_dir" variable in your |.vimrc| to your preferred
 directory.
 
 

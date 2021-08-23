@@ -3,8 +3,8 @@ if exists('loaded_minisnip') || &cp || version < 700
 endif
 let loaded_minisnip = 1
 
-if !exists('g:minisnips_dir')
-    let g:minisnips_dir = substitute(globpath(&rtp, 'snippets/'), "\n", ',', 'g')
+if !exists('g:minisnip_dir')
+    let g:minisnip_dir = substitute(globpath(&rtp, 'snippets/'), "\n", ',', 'g')
 endif
 
 let g:minisnip_snips = {}
