@@ -3,18 +3,26 @@ if exists('loaded_minisnip') || &cp || version < 700
 endif
 let loaded_minisnip = 1
 
-if !exists('snippets_dir')
-    let snippets_dir = substitute(globpath(&rtp, 'snippets/'), "\n", ',', 'g')
+if !exists('g:minisnips_dir')
+    let g:minisnips_dir = substitute(globpath(&rtp, 'snippets/'), "\n", ',', 'g')
 endif
 
 let g:minisnip_snips = {}
 let g:minisnip_multi_snips = {}
 
-inoremap <silent> <tab> <c-r>=minisnip#triggerSnippet()<cr>
-snoremap <silent> <tab> <esc>i<right><c-r>=minisnip#triggerSnippet()<cr>
-inoremap <silent> <s-tab> <c-r>=minisnip#backwardsSnippet()<cr>
-snoremap <silent> <s-tab> <esc>i<right><c-r>=minisnip#backwardsSnippet()<cr>
-inoremap <silent> <c-r><tab> <c-r>=minisnip#showAvailableSnips()<cr>
+inoremap <silent> <Plug>(minisnipTrigger) <c-r>=minisnip#triggerSnippet()<cr>
+snoremap <silent> <Plug>(minisnipTrigger) <esc>i<right><c-r>=minisnip#triggerSnippet()<cr>
+inoremap <silent> <Plug>(minisnipBackwards) <c-r>=minisnip#backwardsSnippet()<cr>
+snoremap <silent> <Plug>(minisnipBackwards) <esc>i<right><c-r>=minisnip#backwardsSnippet()<cr>
+inoremap <silent> <Plug>(minisnipShowAvailable) <c-r>=minisnip#showAvailableSnippets()<cr>
+
+if get(g:, "minisnip_default_maps", v:true)
+    imap <tab> <Plug>(minisnipTrigger)
+    smap <tab> <Plug>(minisnipTrigger)
+    imap <s-tab> <Plug>(minisnipBackwards)
+    smap <s-tab> <Plug>(minisnipBackwards)
+    imap <c-r><tab> <Plug>(minisnipShowAvailable)
+endif
 
 call minisnip#fs#reloadSnippets('_') " Get global snippets
 au FileType * if &ft != 'help' | call minisnip#fs#reloadSnippets(&ft) | endif

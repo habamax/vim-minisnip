@@ -13,7 +13,7 @@ endf
 fun! minisnip#fs#reloadSnippets(ft)
     let ft = a:ft == '' ? '_' : a:ft
     call s:resetSnippets(ft)
-    for snip_dir in split(g:snippets_dir, ",")
+    for snip_dir in split(g:minisnips_dir, ",")
         call s:getSnippets(snip_dir, ft)
     endfor
 endf

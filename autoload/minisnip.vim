@@ -126,7 +126,7 @@ fun! minisnip#backwardsSnippet()
     return "\<s-tab>"
 endf
 
-fun! minisnip#showAvailableSnips()
+fun! minisnip#showAvailableSnippets()
     let line  = getline('.')
     let col   = col('.')
     let word  = matchstr(getline('.'), '\S\+\%'.col.'c')
