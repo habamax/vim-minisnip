@@ -22,19 +22,6 @@ minisnip.vim implements some of TextMate's snippets features in Vim. A
 snippet is a piece of often-typed text that you can insert into your
 document using a trigger word followed by a <Tab>.
 
-For instance, in a C file using the default installation of minisnip.vim, if
-you type "for<Tab>" in insert mode, it will expand a typical for loop in C: >
-
- for (i = 0; i < count; i++) {
-
- }
-
-
-To go to the next item in the loop, simply <Tab> over to it; if there is
-repeated code, such as the "i" variable in this example, you can simply
-start typing once it's highlighted and all the matches specified in the
-snippet will be updated. To go in reverse, use <Shift-Tab>.
-
 ==============================================================================
 SYNTAX                                                        *snippet-syntax*
 
@@ -195,7 +182,7 @@ minisnip.vim currently has the following disadvantages to TextMate's snippets:
 <
       In TextMate this would first highlight ' id="some_id"', and if
       you hit delete it would automatically skip ${2} and go to ${3}
-      on the next <tab>, but if you didn't delete it it would highlight
+      on the next <Tab>, but if you didn't delete it it would highlight
       "some_id" first. You cannot do this in minisnip.vim.
     - Regex cannot be performed on variables, such as "${1/.*/\U&}"
     - Placeholders cannot span multiple lines.
