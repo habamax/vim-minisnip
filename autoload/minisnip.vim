@@ -76,9 +76,9 @@ fun minisnip#expandSnip(snip, col)
     let [g:minisnip_pos, s:snipLen] = s:buildTabStops(snippet, lnum, col - indent, indent)
 
     if s:snipLen
-        aug minisnipAutocmds
-            au CursorMovedI * call s:updateChangedSnip(0)
-            au InsertEnter * call s:updateChangedSnip(1)
+        aug minisnipAutocmds | au!
+            au CursorMovedI <buffer> call s:updateChangedSnip(0)
+            au InsertEnter <buffer> call s:updateChangedSnip(1)
         aug END
         let s:lastBuf = bufnr(0) " Only expand snippet while in current buffer
         let s:curPos = 0
@@ -416,7 +416,7 @@ endf
 " This updates the snippet as you type when text needs to be inserted
 " into multiple places (e.g. in "${1:default text}foo$1bar$1",
 " "default text" would be highlighted, and if the user types something,
-" UpdateChangedSnip() would be called so that the text after "foo" & "bar"
+" updateChangedSnip() would be called so that the text after "foo" & "bar"
 " are updated accordingly)
 "
 " It also automatically quits the snippet if the cursor is moved out of it
