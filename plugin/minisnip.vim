@@ -1,7 +1,7 @@
-if exists('loaded_minisnip') || &cp || version < 700
+if exists('g:loaded_minisnip') || &cp || version < 700
     finish
 endif
-let loaded_minisnip = 1
+let g:loaded_minisnip = 1
 
 if !exists('g:minisnip_dir')
     let g:minisnip_dir = substitute(globpath(&rtp, 'snippets/'), "\n", ',', 'g')
