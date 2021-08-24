@@ -146,6 +146,22 @@ one, change the "g:minisnip_dir" variable in your |.vimrc| to your preferred
 directory.
 
 
+USAGE                                                      *minisnip-commands*
+
+Once you have edited your snippets they could be reloaded using following
+commands:
+
+                                                          *:MinisnipReloadAll*
+:MinisnipReloadAll      Reload all snippets for all filetypes.
+
+
+                                                          *:MinisnipReload*
+:MinisnipReload         Reload snippets for a given filetype. Use current
+                        filetype if no argument is supplied.
+
+Use ':MinisnipReload _' to reload global snippets only.
+
+
                                              *minisnips-list* *i_CTRL-R_<Tab>*
 If you would like to see what snippets are available, simply type <C-r><Tab>
 in the current buffer to show a list via |popupmenu-completion|.

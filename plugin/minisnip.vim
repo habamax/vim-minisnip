@@ -10,6 +10,9 @@ endif
 let g:minisnip_snips = {}
 let g:minisnip_multi_snips = {}
 
+command MinisnipReloadAll :call minisnip#fs#reloadAllSnippets()
+command -nargs=? -complete=filetype MinisnipReload :call minisnip#fs#reloadSnippets(<q-args>)
+
 inoremap <silent> <Plug>(minisnipTrigger) <c-r>=minisnip#triggerSnippet()<cr>
 snoremap <silent> <Plug>(minisnipTrigger) <esc>i<right><c-r>=minisnip#triggerSnippet()<cr>
 inoremap <silent> <Plug>(minisnipBackwards) <c-r>=minisnip#backwardsSnippet()<cr>
@@ -24,5 +27,5 @@ if get(g:, "minisnip_default_maps", v:true)
     imap <c-r><tab> <Plug>(minisnipShowAvailable)
 endif
 
-call minisnip#fs#reloadSnippets('_') " Get global snippets
-au FileType * if &ft != 'help' | call minisnip#fs#reloadSnippets(&ft) | endif
+MinisnipReload _
+au FileType * MinisnipReload

@@ -11,7 +11,13 @@ endf
 
 " Reload snippets for filetype.
 fun! minisnip#fs#reloadSnippets(ft)
-    let ft = a:ft == '' ? '_' : a:ft
+    if empty(a:ft) && empty(&ft)
+        let ft = '_'
+    elseif empty(a:ft)
+        let ft = &ft
+    else
+        let ft = a:ft
+    endif
     call s:resetSnippets(ft)
     for snip_dir in split(g:minisnip_dir, ",")
         call s:getSnippets(snip_dir, ft)
