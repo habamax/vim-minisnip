@@ -118,7 +118,8 @@ TextMates's functionality, use the |system()| function. E.g.: >
 will insert the current date, assuming you are on a Unix system. Note that you
 can also (and should) use |strftime()| for this example.
 
-                                                                   *multi_snip*
+                                                  *minisnip-multiple-triggers*
+                                                         *minisnip-duplicates*
 To specify that a snippet can have multiple matches in a *.snippets file, use
 this syntax: >
 

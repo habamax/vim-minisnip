@@ -125,9 +125,7 @@ fun! s:makeSnip(scope, trigger, content, ...)
     if !has_key({var}, a:scope) | let {var}[a:scope] = {} | endif
     if !has_key({var}[a:scope], a:trigger)
         let {var}[a:scope][a:trigger] = multisnip ? [[a:1, a:content]] : a:content
-    elseif multisnip | let {var}[a:scope][a:trigger] += [[a:1, a:content]]
-    else
-        echom 'Warning in minisnip.vim: Snippet '.a:trigger.' is already defined.'
-                \ .' See :h multi_snip for help on snippets with multiple matches.'
+    elseif multisnip
+        let {var}[a:scope][a:trigger] += [[a:1, a:content]]
     endif
 endf
