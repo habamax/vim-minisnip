@@ -105,7 +105,7 @@ use the "${#:}" construct without the text; e.g.: >
 
  snippet foo
  	${1:}bar$1
-<                                                          *minisnip-commands*
+<                                                                *minisnip-eval*
 Interpolated Vim Script ~
 
 Snippets can also contain Vim script commands that are executed (via |eval()|)
