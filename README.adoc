@@ -72,3 +72,11 @@ snippet item
 		\item ${1}
 	\end{itemize}
 ------------------------------------------------------------------------------
+
+
+== External Snippets
+
+If you would like to use community-maintained snippets, install link:https://github.com/honza/vim-snippets[].
+
+It has a collection of snippets vim-minisnip should be able to work with as a fork of snipMate.vim.
+
