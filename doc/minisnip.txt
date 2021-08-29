@@ -176,13 +176,13 @@ spaces. If 'softtabstop' is not set, 'shiftwidth' is used instead.
 
                           *minisnip_default_maps* *minisnip-maps* *minisnip-remap*
 
-By default no mappings are created, to create default maps add to your vimrc
+To use default mappings:
 >
  let g:minisnip_default_maps = 1
 
-Having this would create mappings for <tab>, <s-tab> and <C-r><tab>.
+This would map <tab>, <s-tab> and <C-r><tab> in insert and select modes.
 
-If you would like to map another keys add following to your vimrc:
+To map your own keys use <Plug> mappings:
 >
  let g:minisnip_default_maps = 0
  imap <C-j> <Plug>(minisnipTrigger)

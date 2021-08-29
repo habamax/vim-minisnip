@@ -13,13 +13,14 @@ git clone --depth=1 https://github.com/habamax/vim-minisnip.git ~/.vim/pack/plug
 ------------------------------------------------------------------------------
 
 == Default mappings
-Default mappings are turned off by default, to turn them on add to your vimrc:
+
+To use default mappings:
 [source, vim]
 ------------------------------------------------------------------------------
 let g:minisnip_default_maps = 1
 ------------------------------------------------------------------------------
 
-This would map `<tab>`, `<s-tab>` and `<C-r><tab>` in insert and select mode.
+This would map `<tab>`, `<s-tab>` and `<C-r><tab>` in insert and select modes.
 
 To map your own keys use `<Plug>` mappings:
 [source, vim]
