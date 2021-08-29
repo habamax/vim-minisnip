@@ -19,7 +19,7 @@ inoremap <silent> <Plug>(minisnipBackwards) <c-r>=minisnip#backwardsSnippet()<cr
 snoremap <silent> <Plug>(minisnipBackwards) <esc>i<right><c-r>=minisnip#backwardsSnippet()<cr>
 inoremap <silent> <Plug>(minisnipShowAvailable) <c-r>=minisnip#showAvailableSnippets()<cr>
 
-if get(g:, "minisnip_default_maps", v:true)
+if get(g:, "minisnip_default_maps", v:false)
     imap <tab> <Plug>(minisnipTrigger)
     smap <tab> <Plug>(minisnipTrigger)
     imap <s-tab> <Plug>(minisnipBackwards)

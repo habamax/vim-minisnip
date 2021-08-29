@@ -12,6 +12,27 @@ Use plugin manager of your choice or
 git clone --depth=1 https://github.com/habamax/vim-minisnip.git ~/.vim/pack/plug/start/vim-minisnip
 ------------------------------------------------------------------------------
 
+== Default mappings
+Default mappings are turned off by default, to turn them on add to your vimrc:
+[source, vim]
+------------------------------------------------------------------------------
+let g:minisnip_default_maps = 1
+------------------------------------------------------------------------------
+
+This would map `<tab>`, `<s-tab>` and `<C-r><tab>` in insert and select mode.
+
+To map your own keys use `<Plug>` mappings:
+[source, vim]
+------------------------------------------------------------------------------
+ let g:minisnip_default_maps = 0
+ imap <C-j> <Plug>(minisnipTrigger)
+ smap <C-j> <Plug>(minisnipTrigger)
+ imap <C-k> <Plug>(minisnipBackwards)
+ smap <C-k> <Plug>(minisnipBackwards)
+ imap <C-r><C-j> <Plug>(minisnipShowAvailable)
+------------------------------------------------------------------------------
+
+
 == Default snippets
 
 There are no default snippets, create your own:

@@ -174,8 +174,16 @@ If you would like your snippets to be expanded using spaces instead of tabs,
 just enable 'expandtab' and set 'softtabstop' to your preferred amount of
 spaces. If 'softtabstop' is not set, 'shiftwidth' is used instead.
 
-                                                *minisnip-maps* *minisnip-remap*
-To remap a trigger key add following to your vimrc: >
+                          *minisnip_default_maps* *minisnip-maps* *minisnip-remap*
+
+By default no mappings are created, to create default maps add to your vimrc
+>
+ let g:minisnip_default_maps = 1
+
+Having this would create mappings for <tab>, <s-tab> and <C-r><tab>.
+
+If you would like to map another keys add following to your vimrc:
+>
  let g:minisnip_default_maps = 0
  imap <C-j> <Plug>(minisnipTrigger)
  smap <C-j> <Plug>(minisnipTrigger)
