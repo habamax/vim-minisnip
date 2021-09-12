@@ -84,10 +84,10 @@ func! minisnip#expandSnip(snip, col)
     let [g:minisnip_pos, s:snipLen] = s:buildTabStops(snippet, lnum, col - indent, indent)
 
     if s:snipLen
-        aug minisnipAutocmds | au!
+        augroup minisnipAutocmds | au!
             au CursorMovedI <buffer> call s:updateChangedSnip(0)
             au InsertEnter <buffer> call s:updateChangedSnip(1)
-        aug END
+        augroup END
         let s:lastBuf = bufnr(0) " Only expand snippet while in current buffer
         let s:curPos = 0
         let s:endCol = g:minisnip_pos[s:curPos][1]
@@ -212,7 +212,6 @@ func! s:removeSnippet()
         unl s:startCol s:origWordLen s:update
         if exists('s:oldVars') | unl s:oldVars s:oldEndCol | endif
     endif
-    aug! minisnipAutocmds
 endfunc
 
 " Prepare snippet to be processed by s:buildTabStops
