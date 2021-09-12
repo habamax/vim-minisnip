@@ -2,15 +2,15 @@ let s:did_ft = {}
 
 
 " Reload snippets for all filetypes.
-fun! minisnip#fs#reloadAllSnippets()
+func! minisnip#fs#reloadAllSnippets()
     for ft in keys(s:did_ft)
         call minisnip#fs#reloadSnippets(ft)
     endfor
-endf
+endfunc
 
 
 " Reload snippets for filetype.
-fun! minisnip#fs#reloadSnippets(ft)
+func! minisnip#fs#reloadSnippets(ft)
     if empty(a:ft) && empty(&ft)
         let ft = '_'
     elseif empty(a:ft)
@@ -22,10 +22,10 @@ fun! minisnip#fs#reloadSnippets(ft)
     for snip_dir in split(g:minisnip_dir, ",")
         call s:getSnippets(snip_dir, ft)
     endfor
-endf
+endfunc
 
 
-fun! s:getSnippets(dir, filetypes)
+func! s:getSnippets(dir, filetypes)
     for ft in split(a:filetypes, '\.')
         call s:defineSnips(a:dir, ft, ft)
         if ft == 'objc' || ft == 'cpp' || ft == 'cs'
@@ -35,22 +35,22 @@ fun! s:getSnippets(dir, filetypes)
         endif
         let s:did_ft[ft] = 1
     endfor
-endf
+endfunc
 
 
 " Reset snippets for filetype.
-fun! s:resetSnippets(ft)
+func! s:resetSnippets(ft)
     let ft = a:ft == '' ? '_' : a:ft
     for dict in [g:minisnip_snips, g:minisnip_multi_snips, s:did_ft]
         if has_key(dict, ft)
             unlet dict[ft]
         endif
     endfor
-endf
+endfunc
 
 
 " Define "aliasft" snippets for the filetype "realft".
-fun s:defineSnips(dir, aliasft, realft)
+func! s:defineSnips(dir, aliasft, realft)
     for path in split(globpath(a:dir, a:aliasft.'/')."\n".
                     \ globpath(a:dir, a:aliasft.'-*/'), "\n")
         call s:extractSnips(path, a:realft)
@@ -59,10 +59,10 @@ fun s:defineSnips(dir, aliasft, realft)
                     \ globpath(a:dir, a:aliasft.'-*.snippets'), "\n")
         call s:extractSnipsFile(path, a:realft)
     endfor
-endf
+endfunc
 
 
-fun! s:extractSnips(dir, ft)
+func! s:extractSnips(dir, ft)
     for path in split(globpath(a:dir, '*'), "\n")
         if isdirectory(path)
             let pathname = fnamemodify(path, ':t')
@@ -73,10 +73,10 @@ fun! s:extractSnips(dir, ft)
             call s:processFile(path, a:ft)
         endif
     endfor
-endf
+endfunc
 
 
-fun! s:extractSnipsFile(file, ft)
+func! s:extractSnipsFile(file, ft)
     if !filereadable(a:file) | return | endif
     let text = readfile(a:file)
     let inSnip = 0
@@ -101,12 +101,12 @@ fun! s:extractSnipsFile(file, ft)
             let content = ''
         endif
     endfor
-endf
+endfunc
 
 
 " Processes a single-snippet file; optionally add the name of the parent
 " directory for a snippet with multiple matches.
-fun s:processFile(file, ft, ...)
+func! s:processFile(file, ft, ...)
     let keyword = fnamemodify(a:file, ':t:r')
     if keyword  == '' | return | endif
     try
@@ -116,10 +116,10 @@ fun s:processFile(file, ft, ...)
     endtry
     return a:0 ? s:makeSnip(a:ft, a:1, text, keyword)
             \  : s:makeSnip(a:ft, keyword, text)
-endf
+endfunc
 
 
-fun! s:makeSnip(scope, trigger, content, ...)
+func! s:makeSnip(scope, trigger, content, ...)
     let multisnip = a:0 && a:1 != ''
     let var = multisnip ? 'g:minisnip_multi_snips' : 'g:minisnip_snips'
     if !has_key({var}, a:scope) | let {var}[a:scope] = {} | endif
@@ -128,4 +128,4 @@ fun! s:makeSnip(scope, trigger, content, ...)
     elseif multisnip
         let {var}[a:scope][a:trigger] += [[a:1, a:content]]
     endif
-endf
+endfunc

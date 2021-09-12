@@ -7,7 +7,7 @@ func! s:cursor(lnum, charcol)
     endif
 endfunc
 
-fun minisnip#jumpTabStop(backwards)
+func! minisnip#jumpTabStop(backwards)
     let leftPlaceholder = exists('s:origWordLen')
                           \ && s:origWordLen != g:minisnip_pos[s:curPos][2]
     if leftPlaceholder && exists('s:oldEndCol')
@@ -47,9 +47,9 @@ fun minisnip#jumpTabStop(backwards)
     let s:prevLen = [line('$'), charcol('$')]
 
     return g:minisnip_pos[s:curPos][2] == -1 ? '' : s:selectWord()
-endf
+endfunc
 
-fun minisnip#expandSnip(snip, col)
+func! minisnip#expandSnip(snip, col)
     let lnum = line('.') | let col = a:col
 
     let snippet = s:processSnippet(a:snip)
@@ -105,7 +105,7 @@ fun minisnip#expandSnip(snip, col)
                     \ + (newlines ? 0: col - 1))
     endif
     return ''
-endf
+endfunc
 
 fun! minisnip#triggerSnippet()
     if pumvisible()
@@ -128,12 +128,12 @@ fun! minisnip#triggerSnippet()
     endfor
 
     return "\<tab>"
-endf
+endfunc
 
 fun! minisnip#backwardsSnippet()
     if exists('g:minisnip_pos') | return minisnip#jumpTabStop(1) | endif
     return "\<s-tab>"
-endf
+endfunc
 
 fun! minisnip#showAvailableSnippets()
     let line  = getline('.')
@@ -168,13 +168,13 @@ fun! minisnip#showAvailableSnippets()
     call setline(line('.'), substitute(line, repeat('.', matchlen).'\%'.col.'c', '', ''))
     call complete(col, matches)
     return ''
-endf
+endfunc
 
 
 
 " Check if word under cursor is snippet trigger; if it isn't, try checking if
 " the text after non-word characters is (e.g. check for "foo" in "bar.foo")
-fun s:getSnippet(word, scope)
+func! s:getSnippet(word, scope)
     let word = a:word | let snippet = ''
     while snippet == ''
         if exists('g:minisnip_snips["'.a:scope.'"]["'.escape(word, '\"').'"]')
@@ -191,9 +191,9 @@ fun s:getSnippet(word, scope)
         let [word, snippet] = s:getSnippet('.', a:scope)
     endif
     return [word, snippet]
-endf
+endfunc
 
-fun s:chooseSnippet(scope, trigger)
+func! s:chooseSnippet(scope, trigger)
     let snippet = []
     let i = 1
     for snip in g:minisnip_multi_snips[a:scope][a:trigger]
@@ -203,10 +203,10 @@ fun s:chooseSnippet(scope, trigger)
     if i == 2 | return g:minisnip_multi_snips[a:scope][a:trigger][0][1] | endif
     let num = inputlist(snippet) - 1
     return num == -1 ? '' : g:minisnip_multi_snips[a:scope][a:trigger][num][1]
-endf
+endfunc
 
 " Cleanup snippet vars
-fun s:removeSnippet()
+func! s:removeSnippet()
     unl! g:minisnip_pos s:curPos s:snipLen s:endCol s:endLine s:prevLen
          \ s:lastBuf s:oldWord
     if exists('s:update')
@@ -214,10 +214,10 @@ fun s:removeSnippet()
         if exists('s:oldVars') | unl s:oldVars s:oldEndCol | endif
     endif
     aug! minisnipAutocmds
-endf
+endfunc
 
 " Prepare snippet to be processed by s:buildTabStops
-fun s:processSnippet(snip)
+func! s:processSnippet(snip)
     let snippet = a:snip
     " Evaluate eval (`...`) expressions.
     " Backquotes prefixed with a backslash "\" are ignored.
@@ -253,10 +253,10 @@ fun s:processSnippet(snip)
         return substitute(snippet, '\t', repeat(' ', &sts ? &sts : &sw), 'g')
     endif
     return snippet
-endf
+endfunc
 
 " Counts occurences of haystack in needle
-fun s:count(haystack, needle)
+func! s:count(haystack, needle)
     let counter = 0
     let index = stridx(a:haystack, a:needle)
     while index != -1
@@ -264,7 +264,7 @@ fun s:count(haystack, needle)
         let counter += 1
     endw
     return counter
-endf
+endfunc
 
 " Builds a list of a list of each tab stop in the snippet containing:
 " 1.) The tab stop's line number.
@@ -277,7 +277,7 @@ endf
 "     the matches of "$#", to be replaced with the placeholder. This list is
 "     composed the same way as the parent; the first item is the line number,
 "     and the second is the column.
-fun s:buildTabStops(snip, lnum, col, indent)
+func! s:buildTabStops(snip, lnum, col, indent)
     let snipPos = []
     let i = 1
     let withoutVars = substitute(a:snip, '$\d\+', '', 'g')
@@ -310,9 +310,9 @@ fun s:buildTabStops(snip, lnum, col, indent)
         let i += 1
     endw
     return [snipPos, i - 1]
-endf
+endfunc
 
-fun s:updatePlaceholderTabStops()
+func! s:updatePlaceholderTabStops()
     let changeLen = s:origWordLen - g:minisnip_pos[s:curPos][2]
     unl s:startCol s:origWordLen s:update
     if !exists('s:oldVars') | return | endif
@@ -357,9 +357,9 @@ fun s:updatePlaceholderTabStops()
         endfor
     endif
     unl s:endCol s:oldVars s:oldEndCol
-endf
+endfunc
 
-fun s:updateTabStops()
+func! s:updateTabStops()
     let changeLine = s:endLine - g:minisnip_pos[s:curPos][0]
     let changeCol = s:endCol - g:minisnip_pos[s:curPos][1]
     if exists('s:origWordLen')
@@ -401,9 +401,9 @@ fun s:updateTabStops()
             endfor
         endfor
     endif
-endf
+endfunc
 
-fun s:selectWord()
+func! s:selectWord()
     let s:origWordLen = g:minisnip_pos[s:curPos][2]
     let s:oldWord = strcharpart(getline('.'), g:minisnip_pos[s:curPos][1] - 1,
                 \ s:origWordLen)
@@ -420,7 +420,7 @@ fun s:selectWord()
     endif
     return s:origWordLen == 1 ? "\<esc>".l.'gh'
                             \ : "\<esc>".l.'v'.(s:origWordLen - 1)."l\<c-g>"
-endf
+endfunc
 
 " This updates the snippet as you type when text needs to be inserted
 " into multiple places (e.g. in "${1:default text}foo$1bar$1",
@@ -430,7 +430,7 @@ endf
 "
 " It also automatically quits the snippet if the cursor is moved out of it
 " while in insert mode.
-fun s:updateChangedSnip(entering)
+func! s:updateChangedSnip(entering)
     if exists('g:minisnip_pos') && bufnr(0) != s:lastBuf
         call s:removeSnippet()
     elseif exists('s:update') " If modifying a placeholder
@@ -484,11 +484,11 @@ fun s:updateChangedSnip(entering)
             call s:removeSnippet()
         endif
     endif
-endf
+endfunc
 
 " This updates the variables in a snippet when a placeholder has been edited.
 " (e.g., each "$1" in "${1:foo} $1bar $1bar")
-fun s:updateVars()
+func! s:updateVars()
     let newWordLen = s:endCol - s:startCol + 1
     let newWord = strcharpart(getline('.'), s:startCol, newWordLen)
     if newWord == s:oldWord || empty(g:minisnip_pos[s:curPos][3])
@@ -533,4 +533,4 @@ fun s:updateVars()
 
     let s:oldWord = newWord
     let g:minisnip_pos[s:curPos][2] = newWordLen
-endf
+endfunc
