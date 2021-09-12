@@ -1,4 +1,4 @@
-if exists('g:loaded_minisnip') || &cp || version < 700
+if exists('g:loaded_minisnip') || &cp || version < 802
     finish
 endif
 let g:loaded_minisnip = 1

@@ -1,3 +1,12 @@
+func! s:cursor(lnum, charcol)
+    " if has("patch-8.2.2324_3234")
+    if has("patch-8.2.5234")
+        call setcursorcharpos(a:lnum, a:charcol)
+    else
+        call cursor(a:lnum, max([byteidx(getline(a:lnum), a:charcol), a:charcol]))
+    endif
+endfunc
+
 fun minisnip#jumpTabStop(backwards)
     let leftPlaceholder = exists('s:origWordLen')
                           \ && s:origWordLen != g:minisnip_pos[s:curPos][2]
@@ -16,7 +25,7 @@ fun minisnip#jumpTabStop(backwards)
         if exists('startPlaceholder')
             let g:minisnip_pos[s:curPos][1] = startPlaceholder
         else
-            let g:minisnip_pos[s:curPos][1] = col('.')
+            let g:minisnip_pos[s:curPos][1] = charcol('.')
             let g:minisnip_pos[s:curPos][2] = 0
         endif
     endif
@@ -31,11 +40,11 @@ fun minisnip#jumpTabStop(backwards)
         return sMode ? "\<tab>" : minisnip#triggerSnippet()
     endif
 
-    call cursor(g:minisnip_pos[s:curPos][0], g:minisnip_pos[s:curPos][1])
+    call s:cursor(g:minisnip_pos[s:curPos][0], g:minisnip_pos[s:curPos][1])
 
     let s:endLine = g:minisnip_pos[s:curPos][0]
     let s:endCol = g:minisnip_pos[s:curPos][1]
-    let s:prevLen = [line('$'), col('$')]
+    let s:prevLen = [line('$'), charcol('$')]
 
     return g:minisnip_pos[s:curPos][2] == -1 ? '' : s:selectWord()
 endf
@@ -51,10 +60,10 @@ fun minisnip#expandSnip(snip, col)
     let snipLines = split(substitute(snippet, '$\d\+\|${\d\+.\{-}}', '', 'g'), "\n", 1)
 
     let line = getline(lnum)
-    let afterCursor = strpart(line, col - 1)
+    let afterCursor = strcharpart(line, col - 1)
     " Keep text after the cursor
     if afterCursor != "\t" && afterCursor != ' '
-        let line = strpart(line, 0, col - 1)
+        let line = strcharpart(line, 0, col - 1)
         let snipLines[-1] .= afterCursor
     else
         let afterCursor = ''
@@ -68,7 +77,7 @@ fun minisnip#expandSnip(snip, col)
 
     " Autoindent snippet according to previous indentation
     let indent = matchend(line, '^.\{-}\ze\(\S\|$\)') + 1
-    call append(lnum, map(snipLines[1:], "'".strpart(line, 0, indent - 1)."'.v:val"))
+    call append(lnum, map(snipLines[1:], "'".strcharpart(line, 0, indent - 1)."'.v:val"))
 
     " Open any folds snippet expands into
     if &fen | sil! exe lnum.','.(lnum + len(snipLines) - 1).'foldopen' | endif
@@ -85,14 +94,14 @@ fun minisnip#expandSnip(snip, col)
         let s:endCol = g:minisnip_pos[s:curPos][1]
         let s:endLine = g:minisnip_pos[s:curPos][0]
 
-        call cursor(g:minisnip_pos[s:curPos][0], g:minisnip_pos[s:curPos][1])
-        let s:prevLen = [line('$'), col('$')]
+        call s:cursor(g:minisnip_pos[s:curPos][0], g:minisnip_pos[s:curPos][1])
+        let s:prevLen = [line('$'), charcol('$')]
         if g:minisnip_pos[s:curPos][2] != -1 | return s:selectWord() | endif
     else
         unl g:minisnip_pos s:snipLen
         " Place cursor at end of snippet if no tab stop is given
         let newlines = len(snipLines) - 1
-        call cursor(lnum + newlines, indent + len(snipLines[-1]) - len(afterCursor)
+        call s:cursor(lnum + newlines, indent + strchars(snipLines[-1]) - strchars(afterCursor)
                     \ + (newlines ? 0: col - 1))
     endif
     return ''
@@ -106,13 +115,13 @@ fun! minisnip#triggerSnippet()
 
     if exists('g:minisnip_pos') | return minisnip#jumpTabStop(0) | endif
 
-    let word = matchstr(getline('.'), '\S\+\%'.col('.').'c')
+    let word = matchstr(getline('.'), '\S\+\%'.charcol('.').'c')
     for scope in [bufnr('%')] + split(&ft, '\.') + ['_']
         let [trigger, snippet] = s:getSnippet(word, scope)
         " If word is a trigger for a snippet, delete the trigger & expand
         " the snippet.
         if snippet != ''
-            let col = col('.') - len(trigger)
+            let col = charcol('.') - strchars(trigger)
             sil exe 's/\V'.escape(trigger, '/\.').'\%#//'
             return minisnip#expandSnip(snippet, col)
         endif
@@ -128,7 +137,7 @@ endf
 
 fun! minisnip#showAvailableSnippets()
     let line  = getline('.')
-    let col   = col('.')
+    let col   = charcol('.')
     let word  = matchstr(getline('.'), '\S\+\%'.col.'c')
     let words = [word]
     if stridx(word, '.')
@@ -147,7 +156,7 @@ fun! minisnip#showAvailableSnippets()
                     let matches += [trigger] " Show all matches if word is empty
                 elseif trigger =~ '^'.word
                     let matches += [trigger]
-                    let len = len(word)
+                    let len = strchars(word)
                     if len > matchlen | let matchlen = len | endif
                 endif
             endfor
@@ -279,12 +288,12 @@ fun s:buildTabStops(snip, lnum, col, indent)
         let j = i - 1
         call add(snipPos, [0, 0, -1])
         let snipPos[j][0] = a:lnum + s:count(beforeTabStop, "\n")
-        let snipPos[j][1] = a:indent + len(matchstr(withoutOthers, '.*\(\n\|^\)\zs.*\ze${'.i.'\D'))
+        let snipPos[j][1] = a:indent + strchars(matchstr(withoutOthers, '.*\(\n\|^\)\zs.*\ze${'.i.'\D'))
         if snipPos[j][0] == a:lnum | let snipPos[j][1] += a:col | endif
 
         " Get all $# matches in another list, if ${#:name} is given
         if stridx(withoutVars, '${'.i.':') != -1
-            let snipPos[j][2] = len(matchstr(withoutVars, '${'.i.':\zs.\{-}\ze}'))
+            let snipPos[j][2] = strchars(matchstr(withoutVars, '${'.i.':\zs.\{-}\ze}'))
             let dots = repeat('.', snipPos[j][2])
             call add(snipPos[j], [])
             let withoutOthers = substitute(a:snip, '${\d\+.\{-}}\|$'.i.'\@!\d\+', '', 'g')
@@ -293,8 +302,8 @@ fun s:buildTabStops(snip, lnum, col, indent)
                 call add(snipPos[j][3], [0, 0])
                 let snipPos[j][3][-1][0] = a:lnum + s:count(beforeMark, "\n")
                 let snipPos[j][3][-1][1] = a:indent + (snipPos[j][3][-1][0] > a:lnum
-                                           \ ? len(matchstr(beforeMark, '.*\n\zs.*'))
-                                           \ : a:col + len(beforeMark))
+                                           \ ? strchars(matchstr(beforeMark, '.*\n\zs.*'))
+                                           \ : a:col + strchars(beforeMark))
                 let withoutOthers = substitute(withoutOthers, '$'.i.'\ze\(\D\|$\)', '', '')
             endw
         endif
@@ -396,7 +405,7 @@ endf
 
 fun s:selectWord()
     let s:origWordLen = g:minisnip_pos[s:curPos][2]
-    let s:oldWord = strpart(getline('.'), g:minisnip_pos[s:curPos][1] - 1,
+    let s:oldWord = strcharpart(getline('.'), g:minisnip_pos[s:curPos][1] - 1,
                 \ s:origWordLen)
     let s:prevLen[1] -= s:origWordLen
     if !empty(g:minisnip_pos[s:curPos][3])
@@ -405,7 +414,7 @@ fun s:selectWord()
         let s:startCol = g:minisnip_pos[s:curPos][1] - 1
     endif
     if !s:origWordLen | return '' | endif
-    let l = col('.') != 1 ? 'l' : ''
+    let l = charcol('.') != 1 ? 'l' : ''
     if &sel == 'exclusive'
         return "\<esc>".l.'v'.s:origWordLen."l\<c-g>"
     endif
@@ -432,10 +441,10 @@ fun s:updateChangedSnip(entering)
             let s:oldEndCol = s:startCol
             let s:oldVars = deepcopy(g:minisnip_pos[s:curPos][3])
         endif
-        let col = col('.') - 1
+        let col = charcol('.') - 1
 
         if s:endCol != -1
-            let changeLen = col('$') - s:prevLen[1]
+            let changeLen = charcol('$') - s:prevLen[1]
             let s:endCol += changeLen
         else " When being updated the first time, after leaving select mode
             if a:entering | return | endif
@@ -450,19 +459,19 @@ fun s:updateChangedSnip(entering)
         endif
 
         call s:updateVars()
-        let s:prevLen[1] = col('$')
+        let s:prevLen[1] = charcol('$')
     elseif exists('g:minisnip_pos')
         if !a:entering && g:minisnip_pos[s:curPos][2] != -1
             let g:minisnip_pos[s:curPos][2] = -2
         endif
 
-        let col = col('.')
+        let col = charcol('.')
         let lnum = line('.')
         let changeLine = line('$') - s:prevLen[0]
 
         if lnum == s:endLine
-            let s:endCol += col('$') - s:prevLen[1]
-            let s:prevLen = [line('$'), col('$')]
+            let s:endCol += charcol('$') - s:prevLen[1]
+            let s:prevLen = [line('$'), charcol('$')]
         endif
         if changeLine != 0
             let s:endLine += changeLine
@@ -481,14 +490,14 @@ endf
 " (e.g., each "$1" in "${1:foo} $1bar $1bar")
 fun s:updateVars()
     let newWordLen = s:endCol - s:startCol + 1
-    let newWord = strpart(getline('.'), s:startCol, newWordLen)
+    let newWord = strcharpart(getline('.'), s:startCol, newWordLen)
     if newWord == s:oldWord || empty(g:minisnip_pos[s:curPos][3])
         return
     endif
 
     let changeLen = g:minisnip_pos[s:curPos][2] - newWordLen
     let curLine = line('.')
-    let startCol = col('.')
+    let startCol = charcol('.')
     let oldStartSnip = s:startCol
     let updateTabStops = changeLen != 0
     let i = 0
@@ -519,7 +528,7 @@ fun s:updateVars()
                         \ escape(s:oldWord, '\'), escape(newWord, '\&'), ''))
     endfor
     if oldStartSnip != s:startCol
-        call cursor(0, startCol + s:startCol - oldStartSnip)
+        call s:cursor(0, startCol + s:startCol - oldStartSnip)
     endif
 
     let s:oldWord = newWord
