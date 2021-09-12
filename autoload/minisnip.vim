@@ -1,6 +1,5 @@
 func! s:cursor(lnum, charcol)
-    " if has("patch-8.2.2324_3234")
-    if has("patch-8.2.5234")
+    if has("patch-8.2.2324")
         call setcursorcharpos(a:lnum, a:charcol)
     else
         call cursor(a:lnum, max([byteidx(getline(a:lnum), a:charcol), a:charcol]))
