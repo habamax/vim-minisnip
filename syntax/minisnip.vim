@@ -5,7 +5,7 @@ endif
 syn match minisnipComment '^#.*'
 syn match minisnipPlaceHolder '\${\d\+\(:.\{-}\)\=}' contains=minisnipCommand
 syn match minisnipTabStop '\$\d\+'
-syn match minisnipCommand '[^\\]`.\{-}`'
+syn region minisnipCommand start='[^\\]\zs`[^`[:space:]]' skip='\\`' end='[^[:space:]]`\@<!`' oneline
 syn match minisnippet '^snippet.*' transparent contains=minisnipMultiText,minisnipKeyword
 syn match minisnipMultiText '\S\+ \zs.*' contained
 syn match minisnipKeyword '^snippet'me=s+8 contained

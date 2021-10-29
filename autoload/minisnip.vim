@@ -222,14 +222,11 @@ endfunc
 func! s:processSnippet(snip)
     let snippet = a:snip
     " Evaluate eval (`...`) expressions.
-    " Backquotes prefixed with a backslash "\" are ignored.
-    " Using a loop here instead of a regex fixes a bug with nested "\=".
     if stridx(snippet, '`') != -1
-        while match(snippet, '\(^\|[^\\]\)`.\{-}[^\\]`') != -1
-            let snippet = substitute(snippet, '\(^\|[^\\]\)\zs`.\{-}[^\\]`\ze',
-                        \ substitute(eval(matchstr(snippet, '\(^\|[^\\]\)`\zs.\{-}[^\\]\ze`')),
-                        \ "\n\\%$", '', ''), '')
-        endw
+        let snippet = substitute(snippet,
+              \ '\%(^\|[^\\]\)\zs`[^`[:space:]].\{-}[^[:space:]]`\@<!`',
+              \ substitute(eval(matchstr(snippet, '\%(^\|[^\\]\)`\zs[^`[:space:]].\{-}[^[:space:]]\ze`\@<!`')), "\n\\%$", '', ''),
+              \ 'g')
         let snippet = substitute(snippet, "\r", "\n", 'g')
         let snippet = substitute(snippet, '\\`', '`', 'g')
     endif
