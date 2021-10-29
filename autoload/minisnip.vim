@@ -114,7 +114,11 @@ fun! minisnip#triggerSnippet()
 
     if exists('g:minisnip_pos') | return minisnip#jumpTabStop(0) | endif
 
-    let word = matchstr(getline('.'), '\S\+\%'.charcol('.').'c')
+    " Here col() instead of charcol() should be used
+    " otherwise matchstr returns wrong expand word to trigger with
+    " if there is multibyte chars before the cursor
+    " Note: Recent vim has \%.c that matches at cursor position.
+    let word = matchstr(getline('.'), '\S\+\%'.col('.').'c')
     for scope in [bufnr('%')] + split(&ft, '\.') + ['_']
         let [trigger, snippet] = s:getSnippet(word, scope)
         " If word is a trigger for a snippet, delete the trigger & expand
