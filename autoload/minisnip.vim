@@ -219,13 +219,13 @@ func! s:removeSnippet()
 endfunc
 
 " Prepare snippet to be processed by s:buildTabStops
-func! s:processSnippet(snip)
+func! s:processSnippet(snip) abort
     let snippet = a:snip
     " Evaluate eval (`...`) expressions.
     if stridx(snippet, '`') != -1
         let snippet = substitute(snippet,
-              \ '\%(^\|[^\\]\)\zs`[^`[:space:]].\{-}[^[:space:]]`\@<!`',
-              \ substitute(eval(matchstr(snippet, '\%(^\|[^\\]\)`\zs[^`[:space:]].\{-}[^[:space:]]\ze`\@<!`')), "\n\\%$", '', ''),
+              \ '\%(^\|[^\\]\)\zs`\([^`[:space:]].\{-}[^[:space:]\\]\)`\@<!`',
+              \ '\=eval(submatch(1))',
               \ 'g')
         let snippet = substitute(snippet, "\r", "\n", 'g')
         let snippet = substitute(snippet, '\\`', '`', 'g')
