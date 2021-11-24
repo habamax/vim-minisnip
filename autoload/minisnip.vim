@@ -100,8 +100,8 @@ func! minisnip#expandSnip(snip, col)
         unl g:minisnip_pos s:snipLen
         " Place cursor at end of snippet if no tab stop is given
         let newlines = len(snipLines) - 1
-        call s:cursor(lnum + newlines, indent + strchars(snipLines[-1]) - strchars(afterCursor)
-                    \ + (newlines ? 0: col - 1))
+        call s:cursor(lnum + newlines, strchars(snipLines[-1]) - strchars(afterCursor)
+                     \ + (newlines ? indent : col))
     endif
     return ''
 endfunc
