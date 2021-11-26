@@ -29,7 +29,7 @@ To use default mappings:
 This would map :kbd:`Tab`, :kbd:`Shift` + :kbd:`Tab` and :kbd:`Ctrl` + :kbd:`r`
 :kbd:`Tab` in insert and select modes.
 
-To map your own keys use :kbd:`<Plug>` mappings:
+To map your own keys use ``<Plug>`` mappings:
 
 .. code:: vim
 
