@@ -2,6 +2,8 @@
                 vim-minisnip: snipmate.vim based snippets plugin
 ********************************************************************************
 
+.. role:: kbd
+
 Snippets plugin based on `snipmate.vim`_.
 
 .. _snipmate.vim: https://github.com/msanders/snipmate.vim
@@ -26,7 +28,8 @@ To use default mappings:
 
   let g:minisnip_default_maps = 1
 
-This would map :kbd:`<tab>`, :kbd:`<s-tab>` and :kbd:`<C-r><tab>` in insert and select modes.
+This would map :kbd:`Tab`, :kbd:`Shift` + :kbd:`Tab` and :kbd:`Ctrl` + :kbd:`r`
+:kbd:`Tab` in insert and select modes.
 
 To map your own keys use :kbd:`<Plug>` mappings:
 
