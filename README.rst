@@ -54,6 +54,10 @@ There are no default snippets, create your own:
 Example snippets
 ----------------
 
+Note that `snippet` files use ``<tab>``\s for indenting, examples down below are
+rendered with spaces.
+
+
 Global
 ~~~~~~
 .. code:: sh
