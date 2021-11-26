@@ -2,8 +2,6 @@
                 vim-minisnip: snipmate.vim based snippets plugin
 ********************************************************************************
 
-.. role:: kbd
-
 Snippets plugin based on `snipmate.vim`_.
 
 .. _snipmate.vim: https://github.com/msanders/snipmate.vim
