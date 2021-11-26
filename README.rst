@@ -60,7 +60,7 @@ Global
 
   vim ~/.vim/snippets/_.snippet
 
-.. code::
+.. code:: snippet
 
   snippet dd
   	`strftime("%Y-%m-%d")`
@@ -77,7 +77,7 @@ Filetype
   vim ~/.vim/snippets/tex.snippet
 
 
-.. code::
+.. code:: snippet
 
   snippet em
   	\emph{${1}}
