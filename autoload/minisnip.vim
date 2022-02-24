@@ -106,10 +106,11 @@ func! minisnip#expandSnip(snip, col)
     return ''
 endfunc
 
-fun! minisnip#triggerSnippet()
+func! minisnip#triggerSnippet()
+    let triggerMap = s:getTriggerMap()
     if pumvisible()
         call feedkeys("\<esc>a", 'n') " Close completion menu
-        call feedkeys("\<tab>") | return ''
+        call feedkeys(printf('"\%s"', triggerMap)->eval()) | return ''
     endif
 
     if exists('g:minisnip_pos') | return minisnip#jumpTabStop(0) | endif
@@ -130,12 +131,12 @@ fun! minisnip#triggerSnippet()
         endif
     endfor
 
-    return "\<tab>"
+    return printf('"\%s"', triggerMap)->eval()
 endfunc
 
 fun! minisnip#backwardsSnippet()
     if exists('g:minisnip_pos') | return minisnip#jumpTabStop(1) | endif
-    return "\<s-tab>"
+    return printf('"\%s"', s:getBackwardsMap())->eval()
 endfunc
 
 fun! minisnip#showAvailableSnippets()
@@ -532,4 +533,36 @@ func! s:updateVars()
 
     let s:oldWord = newWord
     let g:minisnip_pos[s:curPos][2] = newWordLen
+endfunc
+
+
+func! s:getTriggerMap()
+    redir => imaps
+    silent imap
+    redir END
+
+    let imaps = split(imaps, "\n")
+         \ ->map({_, v -> split(v, '\s\+')[-2:-1]})
+         \ ->filter({_, v -> v[1] == '<Plug>(MinisnipTrigger)'})
+    if empty(imaps) || len(imaps[0]) != 1
+        return "<tab>"
+    else
+        return imaps[0][0]
+    endif
+endfunc
+
+
+func! s:getBackwardsMap()
+    redir => imaps
+    silent imap
+    redir END
+
+    let imaps = split(imaps, "\n")
+         \ ->map({_, v -> split(v, '\s\+')[-2:-1]})
+         \ ->filter({_, v -> v[1] == '<Plug>(MinisnipBackwards)'})
+    if empty(imaps) || len(imaps[0]) != 1
+        return "<s-tab>"
+    else
+        return imaps[0][0]
+    endif
 endfunc
